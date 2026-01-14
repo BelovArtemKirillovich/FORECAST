@@ -1,0 +1,10 @@
+.vscode/
+
+*CMakeFiles/
+*.cmake
+*CMakeCache.txt
+*Makefile
+
+libweather_lib.a 
+app_main
+tests_main
