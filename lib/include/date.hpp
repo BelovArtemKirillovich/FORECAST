@@ -25,6 +25,7 @@ public:
     friend bool operator>(const Date& first, const Date& second);
     friend bool operator<(const Date& first, const Date& second);
     friend bool operator==(const Date& first, const Date& second);
+    friend std::istream& operator>>(std::istream& is, Date& obj);
 };
 
 #endif

@@ -18,6 +18,11 @@ Forecast::Forecast(): count(0), capacity(1) {
     data = new WeatherDay[1];
 }
 
+Forecast::Forecast(WeatherDay* new_data, size_t new_capacity): count(new_capacity), capacity(new_capacity) {
+    if(!new_data) throw invalid_argument("INVALID DATA\n");
+    data = new_data;
+}
+
 Forecast::Forecast(size_t initial_capacity): count(0), capacity(initial_capacity) {
     if (initial_capacity == 0) throw "INVALID CAPACITY\n";
     data = new WeatherDay[initial_capacity];
@@ -52,7 +57,7 @@ void Forecast::deleteByIndex(size_t index) {
 void Forecast::deleteAllErrors() {
     if (count == 0) return;
     size_t deleted_count = 0;
-    remove_if(
+    auto new_end = remove_if(
         data, 
         data + count, 
         [&deleted_count](WeatherDay& day) { 
@@ -61,16 +66,22 @@ void Forecast::deleteAllErrors() {
             return result; 
         }
     );
-    count -= deleted_count;
+    count = distance(data, new_end);
 }
 
-WeatherDay Forecast::findColdestDay() {
+WeatherDay Forecast::findColdestDay(Date from, Date to) {
     if(count == 0) throw invalid_argument("DATA IS EMPTY\n");
-     WeatherDay* coldest_day = min_element(
-        data, 
-        data + count, 
+    auto filter_view = std::ranges::filter_view(
+        std::span(data, count),
+        [from, to](const WeatherDay& day) 
+        { return day.getDate() > from && day.getDate() < to;}
+    );
+    auto coldest_day = min_element(
+        filter_view.begin(), 
+        filter_view.end(), 
         [](const WeatherDay& a, const WeatherDay& b) 
-        { return a.averageTempOfDay() < b.averageTempOfDay();});
+        { return a.averageTempOfDay() < b.averageTempOfDay();}
+    );
     return *coldest_day;
 }
 
@@ -120,7 +131,7 @@ Forecast Forecast::giveAllDaysOfMonth(size_t month) {
     auto view = std::ranges::filter_view(
         std::span(data, count),
         [month](const WeatherDay& day) 
-        { return day.getPhenomen() == Phenomen::Sunny && day.getDate().getMonth() == month;}
+        { return day.getDate().getMonth() == month;}
     );
     if(view.empty()) throw std::runtime_error("There is no weather forecast for this month.\n");
     Forecast result;
@@ -158,11 +169,22 @@ void Forecast::sortDaysByData() {
 }
 
 void Forecast::mergeDaysByData() {
-    for(size_t i = capacity; i != 0; i++) {
+    for(size_t i = count - 1; i != 0; i--) {
         WeatherDay& day = data[i];
-        for(size_t j = i - 1; j != 0; j--) {
-            if(day.getDate() == data[j].getDate()) day += data[j];
-            deleteByIndex(j);
+        // for(size_t j = i - 1; j != 0; j--) {
+        //     if(day.getDate() == data[j].getDate()) {
+        //         day += data[j];
+        //         deleteByIndex(j);
+        //     }
+        // }
+        size_t j = i - 1;
+        while(true) {
+            if(day.getDate() == data[j].getDate()) {
+                day += data[j];
+                deleteByIndex(j);
+            }
+            if(j == 0) break;
+            j--;
         }
     }
 }
@@ -180,15 +202,16 @@ WeatherDay& Forecast::operator[](size_t index) {
 
 Forecast& Forecast::operator=(const Forecast& other) {
     if (this == &other) return *this;
-    delete[] data;
-    count = other.count;
-    capacity = other.capacity;
     if (other.data && count > 0) {
-        data = new WeatherDay[capacity];
+        WeatherDay* new_data = new WeatherDay[capacity];
         // for (size_t index = 0; index < count; ++index) {
         //     data[index] = other.data[index];
         // }
-        copy(data, data + count, other.data);
+        copy(other.data, other.data + other.count, data);
+        delete [] data;
+        data = new_data;
+        count = other.count;
+        capacity = other.capacity;
     } else {
         data = nullptr;
         capacity = 0;
@@ -196,6 +219,17 @@ Forecast& Forecast::operator=(const Forecast& other) {
     }
     return *this;
 }
+
+Forecast& Forecast::operator=(Forecast&& other) noexcept {
+    if (this == &other) return *this;
+    delete[] data;
+    data = other.data;
+    count = other.count;
+    capacity = other.capacity;
+    other.data = nullptr;
+    return *this;
+}
+
 
 ostream& operator<<(std::ostream& os, const Forecast& obj) {
     os << "===========================" << endl;

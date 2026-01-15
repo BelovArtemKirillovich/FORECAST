@@ -37,6 +37,7 @@ public:
 
     WeatherDay& operator+=(const WeatherDay& other);
     friend std::ostream& operator<<(std::ostream& os, const WeatherDay& obj);
+    friend std::istream& operator>>(std::istream& is, WeatherDay& obj);
 };
 
 #endif

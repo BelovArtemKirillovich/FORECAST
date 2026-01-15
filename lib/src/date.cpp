@@ -5,7 +5,7 @@
 
 using namespace std;
 
-Date::Date(): day{0}, month{0}, year{0} {} // Must be init by today
+Date::Date(): day{1}, month{1}, year{1970} {} // Must be init by today
 
 Date::Date(uint8_t new_day, uint8_t new_month, int16_t new_year) {
     setDay(new_day);
@@ -63,4 +63,23 @@ bool operator==(const Date& first, const Date& second) {
         first.month == second.month &&
        first.day == second.day) return true;
     else return false;
+}
+
+istream& operator>>(std::istream& is, Date& obj) {
+    int d, m, y;
+    char dot1, dot2;
+    if (is >> d >> dot1 >> m >> dot2 >> y) {
+        if (dot1 == '.' && dot2 == '.') {
+            try {
+                obj.setDay(d);
+                obj.setMonth(m);
+                obj.setYear(y);
+            } catch(...) {
+                is.setstate(std::ios::failbit);
+            }
+        } else {
+            is.setstate(std::ios::failbit);
+        }
+    }
+    return is;
 }

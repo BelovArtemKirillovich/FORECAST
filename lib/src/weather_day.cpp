@@ -70,9 +70,9 @@ string WeatherDay::getPhenomenForPrint() const{
 }
 
 bool WeatherDay::check() const {
-    if((parts_of_day.getMorning().getTemperature() > 60 && parts_of_day.getMorning().getTemperature() < -100)
-        ||(parts_of_day.getDay().getTemperature() > 60 && parts_of_day.getDay().getTemperature() < -100)
-        ||(parts_of_day.getEvening().getTemperature() > 60 && parts_of_day.getEvening().getTemperature() < -100))
+    if((parts_of_day.getMorning().getTemperature() > 60 || parts_of_day.getMorning().getTemperature() < -100)
+        ||(parts_of_day.getDay().getTemperature() > 60 || parts_of_day.getDay().getTemperature() < -100)
+        ||(parts_of_day.getEvening().getTemperature() > 60 || parts_of_day.getEvening().getTemperature() < -100))
         return false;
     if((phenomen == Phenomen::Sunny || phenomen == Phenomen::Cloudy) && precipitation == 0)
         return false;
@@ -100,6 +100,7 @@ WeatherDay& WeatherDay::operator+=(const WeatherDay& other) {
         this->parts_of_day.getEvening().setTemperature(
             (parts_of_day.getEvening().getTemperature() 
             + other.parts_of_day.getEvening().getTemperature())/2);
+        this->setPrecipitation((getPrecipitation() + other.getPrecipitation()) / 2);
         if(static_cast<int>(this->getPhenomen()) < static_cast<int>(other.phenomen)) this->setPhenomen(other.getPhenomen());
         return *this;
         }
@@ -116,4 +117,28 @@ ostream& operator<<(std::ostream& os, const WeatherDay& obj) {
         << "Temperature of evening: " << obj.getPartsOfDay().getEvening().getTemperature() << "\n"
         << "Precipitation: " << obj.getPrecipitation() << endl;
     return os;
+}
+
+std::istream& operator>>(std::istream& is, WeatherDay& obj) {
+    Date d; 
+    double prec;
+    int t1, t2, t3;
+    if (is >> d >> prec >> t1 >> t2 >> t3) {
+        obj.date = d;
+        obj.setPrecipitation(prec);
+        
+        Weather w1, w2, w3;
+        w1.setTemperature(t1);
+        w2.setTemperature(t2);
+        w3.setTemperature(t3);
+        
+        PartsOfDay parts;
+        parts.setMorning(w1);
+        parts.setDay(w2);
+        parts.setEvening(w3);
+        obj.parts_of_day = parts;
+        
+        obj.choicePhenomen();
+    }
+    return is;
 }
