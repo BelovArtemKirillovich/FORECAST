@@ -64,7 +64,7 @@ void Forecast::deleteAllErrors() {
     count -= deleted_count;
 }
 
-WeatherDay& Forecast::findColdestDay() {
+WeatherDay Forecast::findColdestDay() {
     if(count == 0) throw invalid_argument("DATA IS EMPTY\n");
      WeatherDay* coldest_day = min_element(
         data, 
@@ -74,7 +74,7 @@ WeatherDay& Forecast::findColdestDay() {
     return *coldest_day;
 }
 
-WeatherDay& Forecast::findNextSunnyDay(const Date& today) {
+WeatherDay Forecast::findNextSunnyDay(const Date& today) {
     if (count == 0) throw std::invalid_argument("DATA IS EMPTY");
     auto filter_view = std::ranges::filter_view(
         std::span(data, count),
@@ -114,7 +114,7 @@ WeatherDay& Forecast::findNextSunnyDay(const Date& today) {
     // return data[bestIndex];
 }
 
-Forecast& Forecast::giveAllDaysOfMonth(size_t month) {
+Forecast Forecast::giveAllDaysOfMonth(size_t month) {
     if (count == 0) throw invalid_argument("DATA IS EMPTY\n");
     if (month > 12 || month == 0) throw invalid_argument("INVALID MONTH\n");
     auto view = std::ranges::filter_view(
@@ -123,7 +123,7 @@ Forecast& Forecast::giveAllDaysOfMonth(size_t month) {
         { return day.getPhenomen() == Phenomen::Sunny && day.getDate().getMonth() == month;}
     );
     if(view.empty()) throw std::runtime_error("There is no weather forecast for this month.\n");
-    auto result = Forecast();
+    Forecast result;
     for(auto& day : view) result += day;
     return result;
     // size_t new_count = 0;
@@ -170,6 +170,7 @@ void Forecast::mergeDaysByData() {
 Forecast& Forecast::operator+=(const WeatherDay& new_day) {
     if(count == capacity) resize(capacity * 2);
     data[count++] = new_day;
+    return *this;
 }
 
 WeatherDay& Forecast::operator[](size_t index) {

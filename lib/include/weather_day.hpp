@@ -30,13 +30,13 @@ public:
     double getPrecipitation() const;
     Phenomen getPhenomen() const;
     Date getDate() const;
-    string getPhenomenForPrint() const;
+    std::string getPhenomenForPrint() const;
     
     bool check() const;
     int averageTempOfDay() const;
 
     WeatherDay& operator+=(const WeatherDay& other);
-    friend ostream& operator<<(std::ostream& os, const WeatherDay& obj);
+    friend std::ostream& operator<<(std::ostream& os, const WeatherDay& obj);
 };
 
 #endif

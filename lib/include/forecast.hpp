@@ -21,9 +21,9 @@ public:
     void deleteByIndex(size_t index);
     void deleteAllErrors();
 
-    WeatherDay& findColdestDay();
-    WeatherDay& findNextSunnyDay(const Date& today);
-    Forecast& giveAllDaysOfMonth(size_t month);
+    WeatherDay findColdestDay();
+    WeatherDay findNextSunnyDay(const Date& today);
+    Forecast giveAllDaysOfMonth(size_t month);
 
     void sortDaysByData();
     void mergeDaysByData();
@@ -31,7 +31,7 @@ public:
     Forecast& operator+=(const WeatherDay& newday);
     WeatherDay& operator[](size_t index);
     Forecast& operator=(const Forecast& other);
-    friend ostream& operator<<(std::ostream& os, const Forecast& obj);
+    friend std::ostream& operator<<(std::ostream& os, const Forecast& obj);
 };
 
 #endif
