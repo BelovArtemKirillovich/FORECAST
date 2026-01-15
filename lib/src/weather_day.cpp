@@ -74,11 +74,12 @@ bool WeatherDay::check() const {
         ||(parts_of_day.getDay().getTemperature() > 60 || parts_of_day.getDay().getTemperature() < -100)
         ||(parts_of_day.getEvening().getTemperature() > 60 || parts_of_day.getEvening().getTemperature() < -100))
         return false;
-    if((phenomen == Phenomen::Sunny || phenomen == Phenomen::Cloudy) && precipitation == 0)
+    if((phenomen == Phenomen::Sunny || phenomen == Phenomen::Cloudy) && precipitation != 0)
         return false;
     if(phenomen == Phenomen::Snowy && (parts_of_day.getMorning().getTemperature() > 0
         || parts_of_day.getDay().getTemperature() > 0
-        || parts_of_day.getEvening().getTemperature() > 0))
+        || parts_of_day.getEvening().getTemperature() > 0)
+        || precipitation > 1500)
         return false;
     return true;
 }
@@ -91,15 +92,15 @@ int WeatherDay::averageTempOfDay() const{
 
 WeatherDay& WeatherDay::operator+=(const WeatherDay& other) {
     if(this->date == other.date) {
-        this->parts_of_day.getMorning().setTemperature(
-            (parts_of_day.getMorning().getTemperature() 
-            + other.parts_of_day.getMorning().getTemperature())/2);
-        this->parts_of_day.getDay().setTemperature(
-            (parts_of_day.getDay().getTemperature() 
-            + other.parts_of_day.getDay().getTemperature())/2);
-        this->parts_of_day.getEvening().setTemperature(
-            (parts_of_day.getEvening().getTemperature() 
-            + other.parts_of_day.getEvening().getTemperature())/2);
+        int new_temperature_morning = (this->parts_of_day.getMorning().getTemperature() 
+            + other.parts_of_day.getMorning().getTemperature()) / 2;
+        parts_of_day.setMorning(new_temperature_morning);
+        int new_temperature_day = (this->parts_of_day.getDay().getTemperature() 
+            + other.parts_of_day.getDay().getTemperature()) / 2;
+        parts_of_day.setDay(new_temperature_day);
+        int new_temperature_evening = (this->parts_of_day.getEvening().getTemperature() 
+            + other.parts_of_day.getEvening().getTemperature()) / 2;
+        parts_of_day.setEvening(new_temperature_evening);
         this->setPrecipitation((getPrecipitation() + other.getPrecipitation()) / 2);
         if(static_cast<int>(this->getPhenomen()) < static_cast<int>(other.phenomen)) this->setPhenomen(other.getPhenomen());
         return *this;
@@ -126,18 +127,15 @@ std::istream& operator>>(std::istream& is, WeatherDay& obj) {
     if (is >> d >> prec >> t1 >> t2 >> t3) {
         obj.date = d;
         obj.setPrecipitation(prec);
-        
         Weather w1, w2, w3;
         w1.setTemperature(t1);
         w2.setTemperature(t2);
         w3.setTemperature(t3);
-        
         PartsOfDay parts;
         parts.setMorning(w1);
         parts.setDay(w2);
         parts.setEvening(w3);
         obj.parts_of_day = parts;
-        
         obj.choicePhenomen();
     }
     return is;

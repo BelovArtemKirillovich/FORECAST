@@ -99,30 +99,6 @@ WeatherDay Forecast::findNextSunnyDay(const Date& today) {
         [](const WeatherDay& a, const WeatherDay& b)
         { return a.getDate() < b.getDate(); });
     return *result;
-    // bool found = false;
-    // size_t bestIndex = 0; 
-    // Date earliestDate;
-    //auto filter_views = filter_view(vec, [today](const WeatherDay& day) { return day.getPhenomen() == Phenomen::Sunny && day.getDate() > today; });
-    //auto filtered = data | std::views::filter([today](const WeatherDay& day) {
-    //return day.getPhenomen() == Phenomen::Sunny && day.getDate() > today;});
-    // for () {
-    //     const WeatherDay& day = data[index];
-    //     if (day.getPhenomen() == Phenomen::Sunny && day.getDate() > today) {
-    //         if (!found) {
-    //             found = true;
-    //             bestIndex = index;
-    //             earliestDate = day.getDate();
-    //         } 
-    //         else {
-    //             if (day.getDate() < earliestDate) {
-    //                 earliestDate = day.getDate();
-    //                 bestIndex = index;
-    //             }
-    //         }
-    //     }
-    // }
-    // if (!found) throw std::runtime_error("No sunny day found after the given date");
-    // return data[bestIndex];
 }
 
 Forecast Forecast::giveAllDaysOfMonth(size_t month) {
@@ -137,26 +113,6 @@ Forecast Forecast::giveAllDaysOfMonth(size_t month) {
     Forecast result;
     for(auto& day : view) result += day;
     return result;
-    // size_t new_count = 0;
-    // for (size_t i = 0; i < count; ++i) {
-    //     if (data[i].getDate().getMonth() == month) {
-    //         ++new_count;
-    //     }
-    // }
-    // WeatherDay* new_data = nullptr;
-    // if (new_count > 0) {
-    //     new_data = new WeatherDay[new_count];
-    //     size_t index = 0;
-    //     for (size_t i = 0; i < count; ++i) {
-    //         if (data[i].getDate().getMonth() == month) {
-    //             new_data[index++] = data[i];
-    //         }
-    //     }
-    // }
-    // delete[] data;
-    // data = new_data;
-    // count = count;
-    // capacity = count;
 }
 
 void Forecast::sortDaysByData() {
@@ -204,9 +160,6 @@ Forecast& Forecast::operator=(const Forecast& other) {
     if (this == &other) return *this;
     if (other.data && count > 0) {
         WeatherDay* new_data = new WeatherDay[capacity];
-        // for (size_t index = 0; index < count; ++index) {
-        //     data[index] = other.data[index];
-        // }
         copy(other.data, other.data + other.count, data);
         delete [] data;
         data = new_data;

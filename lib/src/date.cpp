@@ -5,7 +5,7 @@
 
 using namespace std;
 
-Date::Date(): day{1}, month{1}, year{1970} {} // Must be init by today
+Date::Date(): day{1}, month{1}, year{1970} {}
 
 Date::Date(uint8_t new_day, uint8_t new_month, int16_t new_year) {
     setDay(new_day);
@@ -14,17 +14,17 @@ Date::Date(uint8_t new_day, uint8_t new_month, int16_t new_year) {
 }
 
 void Date::setDay(uint8_t new_day) {
-    if(day > 31) throw invalid_argument("INVALID_ARGUMENT(day)");
+    if(new_day > 31) throw invalid_argument("INVALID_ARGUMENT(day)");
     day = new_day;
 }
 
 void Date::setMonth(uint8_t new_month) {
-    if(month > 12) throw invalid_argument("INVALID_ARGUMENT(month)");
+    if(new_month > 12) throw invalid_argument("INVALID_ARGUMENT(month)");
     month = new_month;
 }
 
 void Date::setYear(int16_t new_year) {
-    if (year > 9999 || year < -999) throw invalid_argument("INVALID_ARGUMENT(year)");
+    if (new_year > 9999 || new_year < -999) throw invalid_argument("INVALID_ARGUMENT(year)");
     year = new_year;
 }
 
@@ -43,7 +43,7 @@ int16_t Date::getYear() const{
 void Date::print() const{
     cout << setw(2) << day << "."
         << setw(2) << month << "."
-        << setw(4) << year << endl; // Can ISO Date standard
+        << setw(4) << year << endl;
 }
 
 bool operator>(const Date& first, const Date& second) {

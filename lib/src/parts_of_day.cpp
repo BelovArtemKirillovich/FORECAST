@@ -1,7 +1,7 @@
 #include "parts_of_day.hpp"
 
 PartsOfDay::PartsOfDay() :
-    morning{}, // инициализация по умолчанию всех погод с вызовом конструктора по умолчанию
+    morning{},
     day {},
     evening{}
 {};
@@ -16,6 +16,17 @@ void PartsOfDay::setDay(Weather newweather) {
 
 void PartsOfDay::setEvening(Weather newweather) {
     evening = newweather;
+}
+
+void PartsOfDay::setMorning(int new_temperature) {
+    this->morning.setTemperature(new_temperature);
+}
+
+void PartsOfDay::setDay(int new_temperature) {
+    this->day.setTemperature(new_temperature);
+}
+void PartsOfDay::setEvening(int new_temperature) {
+    this->morning.setTemperature(new_temperature);
 }
 
 Weather PartsOfDay::getMorning() const {

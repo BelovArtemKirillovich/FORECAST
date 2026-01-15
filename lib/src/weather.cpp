@@ -4,9 +4,9 @@ using namespace std;
 
 Weather::Weather() : temperature{0} {}
 
-void Weather::setTemperature(int newtemperature) {
-    if(newtemperature < -273) throw invalid_argument("INVALID_ARGUMENT(temperature)");
-    temperature = newtemperature;
+void Weather::setTemperature(int new_temperature) {
+    if(new_temperature < -273) throw invalid_argument("INVALID_ARGUMENT(temperature)");
+    temperature = new_temperature;
 }
 
 int Weather::getTemperature() const{

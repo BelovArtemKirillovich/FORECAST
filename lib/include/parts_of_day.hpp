@@ -12,9 +12,13 @@ private:
 public:
     PartsOfDay();
 
-    void setMorning(Weather newweather);
-    void setDay(Weather newweather);
-    void setEvening(Weather newweather);
+    void setMorning(Weather new_weather);
+    void setDay(Weather new_weather);
+    void setEvening(Weather new_weather);
+
+    void setMorning(int new_temperature);
+    void setDay(int new_temperature);
+    void setEvening(int new_temperature);
 
     Weather getMorning() const;
     Weather getDay() const;
