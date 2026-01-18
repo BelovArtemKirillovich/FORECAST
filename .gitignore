@@ -1,5 +1,8 @@
 .vscode/
 
+googletest-subbuild
+googletest-populate-prefix
+
 _deps
 *CMakeFiles/
 *.cmake
