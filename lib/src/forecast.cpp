@@ -112,6 +112,7 @@ Forecast Forecast::giveAllDaysOfMonth(size_t month) {
     if(view.empty()) throw std::runtime_error("There is no weather forecast for this month.\n");
     Forecast result;
     for(auto& day : view) result += day;
+    result.sortDaysByData();
     return result;
 }
 
@@ -127,12 +128,6 @@ void Forecast::sortDaysByData() {
 void Forecast::mergeDaysByData() {
     for(size_t i = count - 1; i != 0; i--) {
         WeatherDay& day = data[i];
-        // for(size_t j = i - 1; j != 0; j--) {
-        //     if(day.getDate() == data[j].getDate()) {
-        //         day += data[j];
-        //         deleteByIndex(j);
-        //     }
-        // }
         size_t j = i - 1;
         while(true) {
             if(day.getDate() == data[j].getDate()) {
