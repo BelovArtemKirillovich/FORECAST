@@ -142,6 +142,7 @@ void Forecast::mergeDaysByData() {
 
 Forecast& Forecast::operator+=(const WeatherDay& new_day) {
     if(count == capacity) resize(capacity * 2);
+    cout << "BHKNTGN\n";
     data[count++] = new_day;
     return *this;
 }
@@ -153,9 +154,9 @@ WeatherDay& Forecast::operator[](size_t index) {
 
 Forecast& Forecast::operator=(const Forecast& other) {
     if (this == &other) return *this;
-    if (other.data && count > 0) {
-        WeatherDay* new_data = new WeatherDay[capacity];
-        copy(other.data, other.data + other.count, data);
+    if (other.data != nullptr) {
+        WeatherDay* new_data = new WeatherDay[other.capacity];
+        copy(other.data, other.data + other.count, new_data);
         delete [] data;
         data = new_data;
         count = other.count;
@@ -175,6 +176,8 @@ Forecast& Forecast::operator=(Forecast&& other) noexcept {
     count = other.count;
     capacity = other.capacity;
     other.data = nullptr;
+    other.capacity = 0;
+    other.count = 0;
     return *this;
 }
 
@@ -182,7 +185,7 @@ Forecast& Forecast::operator=(Forecast&& other) noexcept {
 ostream& operator<<(std::ostream& os, const Forecast& obj) {
     os << "===========================" << endl;
     for(size_t index = 0; index != obj.count; index++) {
-        os << obj.data[index];
+        os << index + 1 << "." << obj.data[index];
         os << "===========================" << endl;
     }
     return os;

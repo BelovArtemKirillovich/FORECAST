@@ -9,6 +9,7 @@ _deps
 *CMakeCache.txt
 *Makefile
 
+html_report
 libweather_lib.a 
 libgmock_main.a
 libgmock.a
@@ -17,3 +18,6 @@ libgtest.a
 app_main
 tests_main
 run_tests
+
+coverage_cleaned.info
+coverage.info

@@ -7,36 +7,36 @@ using namespace std;
 
 Date::Date(): day{1}, month{1}, year{1970} {}
 
-Date::Date(uint8_t new_day, uint8_t new_month, int16_t new_year) {
+Date::Date(uint32_t new_day, uint32_t new_month, int32_t new_year) {
     setDay(new_day);
     setMonth(new_month);
     setYear(new_year);
 }
 
-void Date::setDay(uint8_t new_day) {
+void Date::setDay(uint32_t new_day) {
     if(new_day > 31) throw invalid_argument("INVALID_ARGUMENT(day)");
     day = new_day;
 }
 
-void Date::setMonth(uint8_t new_month) {
+void Date::setMonth(uint32_t new_month) {
     if(new_month > 12) throw invalid_argument("INVALID_ARGUMENT(month)");
     month = new_month;
 }
 
-void Date::setYear(int16_t new_year) {
+void Date::setYear(int32_t new_year) {
     if (new_year > 9999 || new_year < -999) throw invalid_argument("INVALID_ARGUMENT(year)");
     year = new_year;
 }
 
-uint8_t Date::getDay() const{
+uint32_t Date::getDay() const{
     return day;
 }
 
-uint8_t Date::getMonth() const{
+uint32_t Date::getMonth() const{
     return month;
 }
 
-int16_t Date::getYear() const{
+int32_t Date::getYear() const{
     return year;
 }
 

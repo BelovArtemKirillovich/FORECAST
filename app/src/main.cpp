@@ -1,10 +1,26 @@
 #include <iostream>
 #include <stdexcept>
+#include <fstream>
 #include "weather_lib.hpp"
 using namespace std;
 
+bool importForecastFromFile(const std::string& filename, Forecast& obj) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        return false;
+    }
+    WeatherDay day;
+    while (file >> day) {
+        obj += day;
+    }
+    if (file.bad()) {
+        return false;
+    }
+    return true;
+}
+
 void menu() {
-    cout << "0.Exit" << "\n" 
+    cout << "***************MENU****************" << "\n" 
         << "0. Exit" << "\n" 
         << "1. Add new forecast" << "\n" 
         << "2. Delete forecast by number" << "\n" 
@@ -20,11 +36,12 @@ void menu() {
 int main() {
     Forecast f1 = Forecast();
     while(true) {
+        menu();
         size_t command;
         cin >> command;
         if(command == 0) break;
         switch(command) {
-            case 1:
+            case 1: {
                 WeatherDay new_weather_day;
                 try {
                 cin >> new_weather_day;
@@ -34,8 +51,9 @@ int main() {
                 }
                 f1 += new_weather_day;
                 break;
-            case 2:
-            cout << "Input number of forecast " << endl;
+            }
+            case 2: {
+                cout << "Input number of forecast " << endl;
                 size_t number;
                 cin >> number;
                 try {
@@ -45,10 +63,12 @@ int main() {
                     std::cerr << er.what() << std::endl; 
                 }
                 break;
-            case 3:
+            }
+            case 3: {
                 f1.deleteAllErrors();
                 break;
-            case 4:
+            }
+            case 4: {
                 Date a, b;
                 cout << "Find from:" << endl;
                 try {
@@ -67,7 +87,8 @@ int main() {
                 auto result = f1.findColdestDay(a, b);
                 cout << "The coldest day " << "\n" << result;
                 break;
-            case 5:
+            }
+            case 5:{
                 Date a;
                 cout << "Date of today:" << endl;
                 try {
@@ -78,13 +99,16 @@ int main() {
                 }
                 cout << "The next sunny day\n" << f1.findNextSunnyDay(a);
                 break;
-            case 6:
+            }
+            case 6: {
                 f1.mergeDaysByData();
                 break;
-            case 7:
+            }
+            case 7: {
                 f1.sortDaysByData();
                 break;
-            case 8:
+            }
+            case 8: {
                 size_t month;
                 cin >> month;
                 try {
@@ -94,11 +118,12 @@ int main() {
                     std::cerr << er.what() << std::endl;
                 }
                 break;
+            }
             case 9:
+                importForecastFromFile("data.txt", f1);
                 break;
         }
         cout << f1;
     }
-    f1.~Forecast();
     return 0;
 }

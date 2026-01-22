@@ -26,7 +26,7 @@ void PartsOfDay::setDay(int new_temperature) {
     this->day.setTemperature(new_temperature);
 }
 void PartsOfDay::setEvening(int new_temperature) {
-    this->morning.setTemperature(new_temperature);
+    this->evening.setTemperature(new_temperature);
 }
 
 Weather PartsOfDay::getMorning() const {
